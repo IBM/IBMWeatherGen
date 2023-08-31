@@ -1,0 +1,9 @@
+{
+    "PATH_FILE_IN": "../data/dset_wg_d.csv",
+    "PATH_FILE_OUT": "../simulations/",
+    "START_YEAR": 2010,
+    "NUM_YEARS": 1,
+    "NUM_SIMULATIONS": 1,
+    "WET_EXTREME": 0.999
+}  
+
