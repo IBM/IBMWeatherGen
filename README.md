@@ -92,4 +92,5 @@ Enhance your understanding with these references:
 
 - Rajagopalan, Balaji et al. "A k-nearest-neighbor simulator for daily precipitation and other weather variables." DOI: [10.1029/1999WR900028](https://doi.org/10.1029/1999WR900028) (1999).
 
+A single-site weather generator in R that inspired this work:
 - WeatherGen: [walkerjeffd.github.io/weathergen/](https://walkerjeffd.github.io/weathergen/)
