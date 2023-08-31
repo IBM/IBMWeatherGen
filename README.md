@@ -1,6 +1,6 @@
 # IBMWeatherGen: Stochastic Weather Generator Tool
 
-Welcome to IBMWeatherGen, a powerful gridded, multisite, multivariate, and daily stochastic weather generator based on resampling methodology.
+Welcome to IBMWeatherGen, a powerful gridded, multisite, multivariate, and daily stochastic weather generator based on resampling methodology written in Python
 
 ## Setup
 
