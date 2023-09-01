@@ -78,13 +78,13 @@ Where:
 
 ## References
 
-Kindly contemplate referencing this works in case you make use of the weather generator:
+We have employed this implementation for conducting experiments detailed in our paper:
 
 - Jorge Luis Guevara Diaz, Maria Garcia, Priscilla Avegliano, et al. *Direct Sampling for Extreme Events Generation and Spatial Variability Enhancement of Weather Generators*. Authorea. December 02, 2022.
 
-- Steinschneider, Scott et al. "A semiparametric multivariate, multisite weather generator with low-frequency variability for use in climate risk assessments." DOI: [10.1002/wrcr.20528](https://doi.org/10.1002/wrcr.20528) (2013).
+To enhance your understanding, we recommend exploring the following references:
 
-Enhance your understanding with these references:
+- Steinschneider, Scott et al. "A semiparametric multivariate, multisite weather generator with low-frequency variability for use in climate risk assessments." DOI: [10.1002/wrcr.20528](https://doi.org/10.1002/wrcr.20528) (2013).
 
 - Apipattanavis, Somkiat et al. "A semiparametric multivariate and multisite weather generator." DOI: [10.1029/2006WR005714](https://doi.org/10.1029/2006WR005714) (2007).
 
