@@ -80,8 +80,8 @@ Where:
 
 We have employed this implementation for conducting experiments detailed in our paper:
 
-- Jorge Luis Guevara Diaz, Maria Garcia, Priscilla Avegliano, et al. *Direct Sampling for Extreme Events Generation and Spatial Variability Enhancement of Weather Generators*. Authorea. December 02, 2022.
-
+- Jorge Luis Guevara Diaz, Maria Garcia, Priscilla Avegliano, et al. *Direct Sampling for Extreme Events Generation and Spatial Variability Enhancement of Weather Generators*. [Authorea. December 02, 2022.](https://www.authorea.com/users/564678/articles/611591-direct-sampling-for-extreme-events-generation-and-spatial-variability-enhancement-of-weather-generators)
+  
 To enhance your understanding, we recommend exploring the following references:
 
 - Steinschneider, Scott et al. "A semiparametric multivariate, multisite weather generator with low-frequency variability for use in climate risk assessments." DOI: [10.1002/wrcr.20528](https://doi.org/10.1002/wrcr.20528) (2013).
