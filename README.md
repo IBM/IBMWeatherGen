@@ -67,7 +67,8 @@ Where:
 ## Authors
 
 - Maria Julia de Castro Villafranca Garcia
-
+   - GitHub: [mairju](https://github.com/mairju)
+     
 - Jorge Luis Guevara Diaz
   - GitHub: [jorjasso](https://github.com/jorjasso)
   - Email: jorgegd@br.ibm.com
