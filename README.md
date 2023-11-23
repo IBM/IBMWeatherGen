@@ -81,7 +81,7 @@ Where:
 
 We have employed this implementation for conducting experiments detailed in our paper:
 
-- Jorge Luis Guevara Diaz, Maria Garcia, Priscilla Avegliano, et al. *Direct Sampling for Spatially Variable Extreme Event Generation in Resampling-Based Stochastic Weather Generators*. (To appear) [JAMES, 2023.](https://www.authorea.com/users/564678/articles/611591-direct-sampling-for-extreme-events-generation-and-spatial-variability-enhancement-of-weather-generators)
+- Jorge Luis Guevara Diaz, Maria Garcia, et al. *Direct Sampling for Spatially Variable Extreme Event Generation in Resampling-Based Stochastic Weather Generators*. [JAMES, 2023.](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2022MS003542)
   
 To enhance your understanding, we recommend exploring the following references:
 
