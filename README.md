@@ -11,15 +11,10 @@ To get started, follow these steps:
 2. **Create and Activate Virtual Environment**: Set up a virtual environment using your preferred tool (conda, pyenv, virtualenv, etc.). Here's an example using conda:
    
     ```
-    conda create -n wg-env python=3.8.14
+    conda env create -f environment.yml
     conda activate wg-env
     ```
 
-3. **Install Dependencies**: Install the required dependencies by executing the following command:
-   
-    ```
-    pip install -r requirements.txt
-    ```
 
 ## Running Tests
 
