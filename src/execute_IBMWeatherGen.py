@@ -1,5 +1,16 @@
 from argparse import ArgumentParser
+import argparse
 
+def str2bool(v):
+    if isinstance(v, bool):
+        return v
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
+    
 
 if __name__ == '__main__':
     parser = ArgumentParser()
@@ -26,8 +37,8 @@ if __name__ == '__main__':
                         default="0.999",
                         help='extreme-wet quantile to be applyed monthly.')
     parser.add_argument('--use_g2s',
-                        dest='use_g2s', type=bool,
-                        default=True,
+                        dest='use_g2s', type=str2bool,
+                        default=False,
                         help='flag to determine whether to use G2S for spatial variability enhancement.')
 
     args = parser.parse_args()

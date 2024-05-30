@@ -4,6 +4,7 @@
     "START_YEAR": 2010,
     "NUM_YEARS": 1,
     "NUM_SIMULATIONS": 1,
-    "WET_EXTREME": 0.999
+    "WET_EXTREME": 0.999,
+    "USE_G2S": "True"
 }  
 

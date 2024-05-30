@@ -76,7 +76,7 @@ class IBMWeatherGen:
         Flag to determine whether to use G2S for spatial variability enhancement.
     """
 
-    def __init__(self, file_in_path, years, wet_extreme_quantile_threshold: Optional[float] = DEFAULT_WET_EXTREME_THRESHOLD, nsimulations=1, use_g2s=True):
+    def __init__(self, file_in_path, years,use_g2s,  wet_extreme_quantile_threshold: Optional[float] = DEFAULT_WET_EXTREME_THRESHOLD, nsimulations=1):
         self.number_of_simulations = nsimulations
         self.file_in_path = file_in_path
         self.simulation_year_list = years
@@ -252,6 +252,7 @@ class IBMWeatherGen:
 
                 df_simulation = adjust_annual_precipitation(df_simulation, predicted)
                 
+                ##print(f"Use G2S: {self.use_g2s}")
                 if self.use_g2s:
                     df_simulation = self.improve_spatial_variability(df_simulation)
                 

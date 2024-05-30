@@ -17,7 +17,7 @@ if __name__ == "__main__":
     start_year = int(config["START_YEAR"])
     end_year = start_year + int(config["NUM_YEARS"])
     number_of_simulations = int(config["NUM_SIMULATIONS"])
-    use_g2s = bool(config.get("USE_G2S", True))  # Default to True if not specified
+    use_g2s = config.get("USE_G2S", "False").lower() in ['true', '1', 't', 'y', 'yes']
 
     if wet_extreme_quantile_threshold != 0:
         wet_extreme_quantile_threshold = float(config["WET_EXTREME"])
