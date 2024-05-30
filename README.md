@@ -47,7 +47,8 @@ To customize the weather generator according to your needs:
        "START_YEAR": 2010,
        "NUM_YEARS": 10,
        "NUM_SIMULATIONS": 5,
-       "WET_EXTREME": 0.999
+       "WET_EXTREME": 0.999,
+       "USE_G2S": true
    }
 
 Where:
@@ -58,6 +59,7 @@ Where:
 - `NUM_YEARS`: Number of years to simulate ahead.
 - `NUM_SIMULATIONS`: Number of simulation sets.
 - `WET_EXTREME`: Threshold for extreme events.
+- `USE_G2S`: Weather using quick sampling.
 
 ## Authors
 

@@ -6,6 +6,11 @@ from typing import Optional
 import pandas as pd
 from random import sample
 import itertools
+import numpy as np
+from PIL import Image
+import requests
+from io import BytesIO
+import matplotlib.pyplot as plt
 
 from bootstrap_sampling import BootstrapSampling
 from markov_chain import FirstOrderMarkovChain
@@ -13,6 +18,7 @@ from lag_one import LagOne
 from annual_forecaster import autoArimaFourierFeatures, Utils #,naiveARIMA, autoArima, autoArimaDeepSearch, autoArimaBoxCoxEndogTransformer, Utils
 from utilities import multisite_disaggregation, adjust_annual_precipitation
 from constants_ import PRECIPITATION, DATE, LONGITUDE, LATITUDE, SAMPLE_DATE, T_MIN, T_MAX
+from g2s import g2s
 
 class IBMWeatherGen:
 
@@ -65,58 +71,43 @@ class IBMWeatherGen:
 
     weather_variables_mean : list[str]
         Weathe variable names after any needed caalculation (e.g mean).
-
+        
+    use_g2s : bool
+        Flag to determine whether to use G2S for spatial variability enhancement.
     """
 
-    def __init__(self, 
-                file_in_path, 
-                years, 
-                #file_out_path, 
-                wet_extreme_quantile_threshold: Optional[float]=DEFAULT_WET_EXTREME_THRESHOLD, 
-                nsimulations=1):
-
-        #self.file_out_path = file_out_path
+    def __init__(self, file_in_path, years, wet_extreme_quantile_threshold: Optional[float] = DEFAULT_WET_EXTREME_THRESHOLD, nsimulations=1, use_g2s=True):
         self.number_of_simulations = nsimulations
         self.file_in_path = file_in_path
         self.simulation_year_list = years
-    
         self.raw_data = None 
         self.daily_data = None 
         self.annual_data = None
         self.frequency = None
         self.weather_variables = list()
-
         self.wet_extreme_quantile_threshold = wet_extreme_quantile_threshold
-        self.randomly_clip=False
-        
-        self.weather_variables_mean = list() 
+        self.randomly_clip = False
+        self.weather_variables_mean = list()
+        self.use_g2s = use_g2s
 
     def closest(self, lst, K):
-    
         return lst[min(range(len(lst)), key = lambda i: abs(lst[i]-K))]
 
     def select_bbox(self, df):
-        
         lat0 = sample(sorted(list(df[LATITUDE].unique()))[1:len(list(df[LATITUDE].unique()))-10], 1)[0]
         lat1 = self.closest(lst=sorted(list(df[LATITUDE].unique())), K=lat0+1)
-
-        
         lon0 = sample(sorted(list(df[LONGITUDE].unique()))[1:len(list(df[LONGITUDE].unique()))-10], 1)[0]
         lon1 = self.closest(lst=sorted(list(df[LONGITUDE].unique())), K=lon0+1)
-        
         return [lon0, lon1, lat0, lat1]
 
     def generate_daily(self, frequency, df):
-        
-        if frequency!= 0:
-            self.daily_data = df.groupby(by=[df[DATE].dt.date, LONGITUDE, LATITUDE]).sum()*(frequency/60)
+        if frequency != 0:
+            self.daily_data = df.groupby(by=[df[DATE].dt.date, LONGITUDE, LATITUDE]).sum() * (frequency / 60)
             self.daily_data.reset_index(inplace=True)
             self.daily_data[DATE] = pd.to_datetime(self.daily_data[DATE])
             self.raw_data['date_'] = self.raw_data[DATE].dt.date
-
         else:
             self.daily_data = df.copy()
-        
         return self.daily_data
 
     def compute_daily_variables(self)->pd.DataFrame:
@@ -145,15 +136,10 @@ class IBMWeatherGen:
         return self.daily_data.groupby(self.daily_data[DATE])[self.weather_variables].mean().reset_index()
     
     
-    def compute_annual_prcp(self)->pd.DataFrame:
-        
+    def compute_annual_prcp(self) -> pd.DataFrame:
         self.daily_data = self.compute_daily_variables()
-
         self.annual_data = self.daily_data.groupby(self.daily_data[DATE].dt.year)[PRECIPITATION].sum()
-        
-        self.annual_data.index = pd.period_range(str(self.annual_data.index[0]), 
-                                                 str(self.annual_data.index[-1]), freq='Y')
-
+        self.annual_data.index = pd.period_range(str(self.annual_data.index[0]), str(self.annual_data.index[-1]), freq='Y')
         return self.annual_data
     
     # def generate_forecasted_values(self):
@@ -266,6 +252,9 @@ class IBMWeatherGen:
 
                 df_simulation = adjust_annual_precipitation(df_simulation, predicted)
                 
+                if self.use_g2s:
+                    df_simulation = self.improve_spatial_variability(df_simulation)
+                
                 df_simulation = df_simulation.assign( n_simu = num_simulation+1 )
                 simulations.append(df_simulation.drop([SAMPLE_DATE], axis=1).set_index(DATE)) #for tests, consider the 'sample_date'
 
@@ -273,3 +262,51 @@ class IBMWeatherGen:
 
 
         return dfnl
+    
+    def improve_spatial_variability(self, df_simulation):
+        for variable in self.weather_variables:
+            # Prepare the training image and destination image for QS
+            ti = df_simulation[variable].values
+            di = np.full_like(ti, np.nan)
+            di[np.isnan(ti)] = np.nan
+            sim, *_ = g2s('-a', 'qs',
+                                  '-ti', ti,
+                                  '-di', di,
+                                  '-dt', [0],  # Zero for continuous variables
+                                  '-k', 1.2,
+                                  '-n', 50,
+                                  '-j', 0.5)
+            df_simulation[variable] = sim
+        return df_simulation
+    
+    def downscale(self, df_simulation, reference_images):
+        downscaled_images = []
+        for variable, ref_img in zip(self.weather_variables, reference_images):
+            di = df_simulation[variable].values
+            sim, *_ = g2s('-a', 'qs',
+                                  '-ti', ref_img,
+                                  '-di', di,
+                                  '-dt', [0],  # Assuming continuous variable
+                                  '-k', 1.2,
+                                  '-n', 50,
+                                  '-j', 0.5)
+            downscaled_images.append(sim)
+        return downscaled_images
+    
+    def generate_extreme_events(self, df_simulation, return_period):
+        extreme_images = []
+        for variable in self.weather_variables:
+            di = df_simulation[variable].values
+            sim, *_ = g2s('-a', 'qs',
+                                  '-ti', di,
+                                  '-di', di,
+                                  '-dt', [0],  # Assuming continuous variable
+                                  '-k', 1.2,
+                                  '-n', 50,
+                                  '-j', 0.5)
+            extreme_images.append(sim)
+        return extreme_images
+    
+    
+    
+    

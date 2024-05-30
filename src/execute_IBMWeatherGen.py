@@ -25,6 +25,10 @@ if __name__ == '__main__':
                         dest='wet_extreme_quantile_threshold', type=float,
                         default="0.999",
                         help='extreme-wet quantile to be applyed monthly.')
+    parser.add_argument('--use_g2s',
+                        dest='use_g2s', type=bool,
+                        default=True,
+                        help='flag to determine whether to use G2S for spatial variability enhancement.')
 
     args = parser.parse_args()
     print(args)
