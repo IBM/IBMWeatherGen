@@ -2,7 +2,6 @@ import numpy as np
 import datetime
 from IBMWeatherGen import IBMWeatherGen 
 import json 
-#import geopandas as gpd
 import pandas as pd
 
 DEFAULT_WET_EXTREME_THRESHOLD = 0.999
@@ -18,6 +17,7 @@ if __name__ == "__main__":
     start_year = int(config["START_YEAR"])
     end_year = start_year + int(config["NUM_YEARS"])
     number_of_simulations = int(config["NUM_SIMULATIONS"])
+    use_g2s = config.get("USE_G2S", "False").lower() in ['true', '1', 't', 'y', 'yes']
 
     if wet_extreme_quantile_threshold != 0:
         wet_extreme_quantile_threshold = float(config["WET_EXTREME"])
@@ -27,10 +27,10 @@ if __name__ == "__main__":
     _st = datetime.datetime.now()
     
     wg_weather = IBMWeatherGen(file_in_path=path_in,
-                               #file_out_path=path_out,
-                               years= list(np.arange(start_year, end_year)), 
+                               years=list(np.arange(start_year, end_year)), 
                                nsimulations=number_of_simulations,
-                               wet_extreme_quantile_threshold=wet_extreme_quantile_threshold)
+                               wet_extreme_quantile_threshold=wet_extreme_quantile_threshold,
+                               use_g2s=use_g2s)
 
     df = wg_weather.generate_weather_series()
 

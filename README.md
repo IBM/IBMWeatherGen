@@ -6,20 +6,32 @@ Welcome to IBMWeatherGen, a powerful gridded, multisite, multivariate, and daily
 
 To get started, follow these steps:
 
+   
+### Environment Setup
+
 1. **Clone the Repository**: Begin by cloning this repository to your local machine.
-   
-2. **Create and Activate Virtual Environment**: Set up a virtual environment using your preferred tool (conda, pyenv, virtualenv, etc.). Here's an example using conda:
-   
-    ```
-    conda create -n wg-env python=3.8.14
+
+2. **Create and activate the conda environment**:
+    ```bash
+    conda env create -f environment.yml
     conda activate wg-env
     ```
 
-3. **Install Dependencies**: Install the required dependencies by executing the following command:
-   
+### Install the G2S Server
+
+Follow the detailed installation instructions on the [G2S Installation Page](https://gaia-unil.github.io/G2S/installation/server.html).
+
+#### Example: Installation on macOS
+
+1. Install Homebrew if not already done:
+    ```bash
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     ```
-    pip install -r requirements.txt
+2. Install G2S using Homebrew:
+    ```bash
+    brew install open-geocomputing/brew/g2s
     ```
+3. Use the `g2s` command to run the server.
 
 ## Running Tests
 
@@ -29,7 +41,11 @@ Follow these steps to run tests:
 
 2. **Navigate to Source Directory**: Move to the `src` directory in the terminal.
 
-3. **Run Simulation**: Execute the simulation by running the following command:
+3. **Start the G2S server**: Start the G2S server if you want to use it
+    ```
+    g2s server -d
+    ```
+4. **Run Simulation**: Execute the simulation by running the following command:
    
     ```
     python execute_IBMWeatherGen_json.py
@@ -52,7 +68,8 @@ To customize the weather generator according to your needs:
        "START_YEAR": 2010,
        "NUM_YEARS": 10,
        "NUM_SIMULATIONS": 5,
-       "WET_EXTREME": 0.999
+       "WET_EXTREME": 0.999,
+       "USE_G2S": true
    }
 
 Where:
@@ -63,6 +80,7 @@ Where:
 - `NUM_YEARS`: Number of years to simulate ahead.
 - `NUM_SIMULATIONS`: Number of simulation sets.
 - `WET_EXTREME`: Threshold for extreme events.
+- `USE_G2S`: Weather using quick sampling.
 
 ## Authors
 
